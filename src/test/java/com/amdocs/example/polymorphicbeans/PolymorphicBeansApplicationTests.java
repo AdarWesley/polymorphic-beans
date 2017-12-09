@@ -26,5 +26,17 @@ public class PolymorphicBeansApplicationTests {
 		assertNotNull(myService);
 	}
 	
+	@Test
+	public void canCallServiceWithCoreType1() {
+		String type = myService.DoByType("Type1");
+		
+		assertEquals("Type1", type);
+	}
 	
+	@Test
+	public void canCallServiceWithCoreType2() {
+		String type = myService.DoByType("Type2");
+		
+		assertEquals("Type2", type);
+	}
 }
