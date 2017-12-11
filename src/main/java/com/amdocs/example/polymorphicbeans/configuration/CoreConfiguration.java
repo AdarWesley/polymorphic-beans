@@ -3,14 +3,17 @@ package com.amdocs.example.polymorphicbeans.configuration;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
 import com.amdocs.example.polymorphicbeans.implementation.MyService;
 import com.amdocs.example.polymorphicbeans.implementation.Type1Service;
 import com.amdocs.example.polymorphicbeans.implementation.Type2Service;
+import com.amdocs.example.polymorphicbeans.implementation.Type3Service;
 import com.amdocs.example.polymorphicbeans.interfaces.IByTypeService;
 import com.amdocs.example.polymorphicbeans.interfaces.IMyService;
 
 @Configuration
+@Order(9)
 public class CoreConfiguration {
 	
 	@Bean
@@ -28,5 +31,11 @@ public class CoreConfiguration {
 	@Qualifier("Type2")
 	IByTypeService type2Service() {
 		return new Type2Service();
+	}
+	
+	@Bean
+	@Qualifier("Type3")
+	IByTypeService type3Service() {
+		return new Type3Service();
 	}
 }

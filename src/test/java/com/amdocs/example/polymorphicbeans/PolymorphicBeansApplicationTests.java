@@ -39,4 +39,11 @@ public class PolymorphicBeansApplicationTests {
 		
 		assertEquals("Type2", type);
 	}
+	
+	@Test
+	public void canCallServiceWithCoreType3() {
+		String type = myService.DoByType("Type3");
+		
+		assertEquals("Type3", type);
+	}
 }
