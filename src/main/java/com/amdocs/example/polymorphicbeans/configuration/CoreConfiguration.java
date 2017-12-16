@@ -13,7 +13,7 @@ import com.amdocs.example.polymorphicbeans.interfaces.IByTypeService;
 import com.amdocs.example.polymorphicbeans.interfaces.IMyService;
 
 @Configuration
-@Order(9)
+@Order(1)
 public class CoreConfiguration {
 	
 	@Bean
