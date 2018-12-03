@@ -4,4 +4,6 @@ public interface IMyService {
 
 	String DoByType(String type);
 
+	String callOverridenBean(String string);
+
 }

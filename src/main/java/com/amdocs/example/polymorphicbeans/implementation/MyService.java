@@ -6,6 +6,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import com.amdocs.example.beans.factory.annotation.BeanFactoryAnnotationUtilsExtention;
 import com.amdocs.example.polymorphicbeans.interfaces.IByTypeService;
+import com.amdocs.example.polymorphicbeans.interfaces.ICustomizableBean;
 import com.amdocs.example.polymorphicbeans.interfaces.IMyService;
 
 public class MyService implements IMyService {
@@ -15,9 +16,17 @@ public class MyService implements IMyService {
 	
 	IByTypeService byTypeService;
 	
+	@Autowired
+	ICustomizableBean customizableBean;
+	
 	@Override
 	public String DoByType(String type) {
 		byTypeService = BeanFactoryAnnotationUtilsExtention.qualifiedBeanOfType(ctx.getBeanFactory(), IByTypeService.class, type);		
 		return byTypeService.execute();
+	}
+
+	@Override
+	public String callOverridenBean(String value) {
+		return customizableBean.doSomething(value);
 	}
 }

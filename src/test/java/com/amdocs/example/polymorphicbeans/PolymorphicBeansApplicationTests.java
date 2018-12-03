@@ -46,4 +46,11 @@ public class PolymorphicBeansApplicationTests {
 		
 		assertEquals("Type3", type);
 	}
+	
+	@Test
+	public void canOverrideCoreByCustomizationAndAccessCoreBean() {
+		String value = myService.callOverridenBean("value");
+		
+		assertEquals("Customized(core(value))", value);
+	}
 }

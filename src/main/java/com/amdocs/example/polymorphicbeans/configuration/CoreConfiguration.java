@@ -5,11 +5,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
+import com.amdocs.example.polymorphicbeans.implementation.CoreCustomizableBean;
 import com.amdocs.example.polymorphicbeans.implementation.MyService;
 import com.amdocs.example.polymorphicbeans.implementation.Type1Service;
 import com.amdocs.example.polymorphicbeans.implementation.Type2Service;
 import com.amdocs.example.polymorphicbeans.implementation.Type3Service;
 import com.amdocs.example.polymorphicbeans.interfaces.IByTypeService;
+import com.amdocs.example.polymorphicbeans.interfaces.ICustomizableBean;
 import com.amdocs.example.polymorphicbeans.interfaces.IMyService;
 
 @Configuration
@@ -37,5 +39,10 @@ public class CoreConfiguration {
 	@Qualifier("Type3")
 	IByTypeService type3Service() {
 		return new Type3Service();
+	}
+	
+	@Bean(name="coreCustomizableBean")
+	ICustomizableBean customizableBean() {
+		return new CoreCustomizableBean();
 	}
 }
