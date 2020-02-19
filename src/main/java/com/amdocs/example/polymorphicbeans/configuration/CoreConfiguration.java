@@ -41,7 +41,8 @@ public class CoreConfiguration {
 		return new Type3Service();
 	}
 	
-	@Bean(name="coreCustomizableBean")
+	@Bean
+	@Qualifier("coreCustomizableBean")
 	ICustomizableBean customizableBean() {
 		return new CoreCustomizableBean();
 	}

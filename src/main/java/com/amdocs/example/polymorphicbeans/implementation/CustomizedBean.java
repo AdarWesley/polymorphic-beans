@@ -6,10 +6,10 @@ public class CustomizedBean implements ICustomizableBean {
 
 	private ICustomizableBean coreBean;
 
-	public CustomizedBean(ICustomizableBean coreCustomizableBean) {
-		this.coreBean = coreCustomizableBean;
+	public CustomizedBean(ICustomizableBean coreBean) {
+		this.coreBean = coreBean;
 	}
-
+	
 	@Override
 	public String doSomething(String value) {
 		return "Customized(" + coreBean.doSomething(value) + ")";
