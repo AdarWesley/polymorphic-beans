@@ -42,6 +42,10 @@ import ch.qos.logback.core.subst.Token.Type;
 
 public abstract class BeanFactoryAnnotationUtilsExtention {
 
+	public static <T> T qualifiedBeanOfType(BeanFactory beanFactory, Class<T> beanType, String qualifier) throws BeansException {
+		return qualifiedBeanOfType(beanFactory, beanType, qualifier, true);
+	}
+
 	/**
 	 * Obtain a bean of type {@code T} from the given {@code BeanFactory} declaring a
 	 * qualifier (e.g. via {@code <qualifier>} or {@code @Qualifier}) matching the given
@@ -55,24 +59,28 @@ public abstract class BeanFactoryAnnotationUtilsExtention {
 	 * @throws BeansException if the bean could not be created
 	 * @see BeanFactory#getBean(Class)
 	 */
-	public static <T> T qualifiedBeanOfType(BeanFactory beanFactory, Class<T> beanType, String qualifier)
+	public static <T> T qualifiedBeanOfType(BeanFactory beanFactory, Class<T> beanType, String qualifier, Boolean throwIfNoMatch)
 			throws BeansException {
 
 		Assert.notNull(beanFactory, "BeanFactory must not be null");
 
 		if (beanFactory instanceof ConfigurableListableBeanFactory) {
 			// Full qualifier matching supported.
-			return qualifiedBeanOfType((ConfigurableListableBeanFactory) beanFactory, beanType, qualifier);
+			return qualifiedBeanOfType((ConfigurableListableBeanFactory) beanFactory, beanType, qualifier, throwIfNoMatch);
 		}
 		else if (beanFactory.containsBean(qualifier)) {
 			// Fallback: target bean at least found by bean name.
 			return beanFactory.getBean(qualifier, beanType);
 		}
 		else {
-			throw new NoSuchBeanDefinitionException(qualifier, "No matching " + beanType.getSimpleName() +
-					" bean found for bean name '" + qualifier +
-					"'! (Note: Qualifier matching not supported because given " +
-					"BeanFactory does not implement ConfigurableListableBeanFactory.)");
+			if (throwIfNoMatch) {
+				throw new NoSuchBeanDefinitionException(qualifier, "No matching " + beanType.getSimpleName() +
+						" bean found for bean name '" + qualifier +
+						"'! (Note: Qualifier matching not supported because given " +
+						"BeanFactory does not implement ConfigurableListableBeanFactory.)");
+			} else {
+				return null;
+			}
 		}
 	}
 
@@ -84,7 +92,7 @@ public abstract class BeanFactoryAnnotationUtilsExtention {
 	 * @param qualifier the qualifier for selecting between multiple bean matches
 	 * @return the matching bean of type {@code T} (never {@code null})
 	 */
-	private static <T> T qualifiedBeanOfType(ConfigurableListableBeanFactory bf, Class<T> beanType, String qualifier) {
+	private static <T> T qualifiedBeanOfType(ConfigurableListableBeanFactory bf, Class<T> beanType, String qualifier, Boolean throwIfNoMatch) {
 		String[] candidateBeans = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(bf, beanType);
 		String matchingBean = null;
 		int matchingOrder = 0;
@@ -95,7 +103,8 @@ public abstract class BeanFactoryAnnotationUtilsExtention {
 				if (bd instanceof AnnotatedBeanDefinition) {
 					AnnotatedBeanDefinition abd = (AnnotatedBeanDefinition)bd;
 					AnnotationMetadata amd = abd.getMetadata();
-					beanOrder = (int)amd.getAnnotationAttributes("org.springframework.core.annotation.Order").get("value");
+					beanOrder = amd.getAnnotationAttributes("org.springframework.core.annotation.Order") != null?
+							(int)amd.getAnnotationAttributes("org.springframework.core.annotation.Order").get("value") : 0;
 				}
 				
 				if (matchingBean == null || beanOrder > matchingOrder) {
@@ -114,8 +123,12 @@ public abstract class BeanFactoryAnnotationUtilsExtention {
 			return bf.getBean(qualifier, beanType);
 		}
 		else {
-			throw new NoSuchBeanDefinitionException(qualifier, "No matching " + beanType.getSimpleName() +
-					" bean found for qualifier '" + qualifier + "' - neither qualifier match nor bean name match!");
+			if (throwIfNoMatch) {
+				throw new NoSuchBeanDefinitionException(qualifier, "No matching " + beanType.getSimpleName() +
+						" bean found for qualifier '" + qualifier + "' - neither qualifier match nor bean name match!");
+			} else {
+				return null;
+			}
 		}
 	}
 

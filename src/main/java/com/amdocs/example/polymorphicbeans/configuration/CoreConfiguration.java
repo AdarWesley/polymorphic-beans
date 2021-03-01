@@ -6,11 +6,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
 import com.amdocs.example.polymorphicbeans.implementation.CoreCustomizableBean;
+import com.amdocs.example.polymorphicbeans.implementation.CoreExitPointEnabledService;
+import com.amdocs.example.polymorphicbeans.implementation.ExitPointWrapperImpl;
 import com.amdocs.example.polymorphicbeans.implementation.MyService;
 import com.amdocs.example.polymorphicbeans.implementation.Type1Service;
 import com.amdocs.example.polymorphicbeans.implementation.Type2Service;
 import com.amdocs.example.polymorphicbeans.implementation.Type3Service;
+import com.amdocs.example.polymorphicbeans.interfaces.ExitPointWrapper;
 import com.amdocs.example.polymorphicbeans.interfaces.IByTypeService;
+import com.amdocs.example.polymorphicbeans.interfaces.ICoreExitPointEnabledService;
 import com.amdocs.example.polymorphicbeans.interfaces.ICustomizableBean;
 import com.amdocs.example.polymorphicbeans.interfaces.IMyService;
 
@@ -45,5 +49,15 @@ public class CoreConfiguration {
 	@Qualifier("coreCustomizableBean")
 	ICustomizableBean customizableBean() {
 		return new CoreCustomizableBean();
+	}
+	
+	@Bean
+	ICoreExitPointEnabledService coreExitPointEnabledService() {
+		return new CoreExitPointEnabledService();
+	}
+	
+	@Bean
+	ExitPointWrapper exitPointWrapper() {
+		return new ExitPointWrapperImpl();
 	}
 }
